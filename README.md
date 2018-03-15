@@ -7,7 +7,7 @@ A zero-dependency library to comfortly run Node.js functions in a separate threa
 ## Installation
 
 ```bash
-npm install --save git+https://git@github.com/Loilo/branchy.git
+npm install --save branchy
 ```
 
 ## Usage
