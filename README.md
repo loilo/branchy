@@ -1,4 +1,6 @@
 # Branchy
+![Travis](https://img.shields.io/travis/Loilo/color-blend.svg)
+![npm](https://img.shields.io/npm/v/branchy.svg)
 
 A zero-dependency library to comfortly run Node.js functions in a separate thread.
 
