@@ -1,19 +1,25 @@
 const branchy = require('../index')
 
-test('gets correct result for basic synchronous functions', async () => {
-  expect(await branchy((...numbers) => {
+test('gets correct result for basic synchronous functions', () => {
+  branchy((...numbers) => {
     return numbers.reduce((carry, current) => carry + current, 0)
-  })(1, 2, 3)).toBe(6)
+  })(1, 2, 3)
+  .then(result => {
+    expect(result).toBe(6)
+  })
 })
 
-test('gets correct result for basic asynchronous functions', async () => {
-  expect(await branchy(() => new Promise(resolve => {
+test('gets correct result for basic asynchronous functions', () => {
+  branchy(() => new Promise(resolve => {
     setTimeout(() => resolve('foo'), 50)
-  }))()).toBe('foo')
+  }))()
+  .then(result => {
+    expect(result).toBe('foo')
+  })
 })
 
-test('re-throws errors', async () => {
-  await branchy(() => {
+test('re-throws errors', () => {
+  branchy(() => {
     throw new Error('Some error inside threaded function')
   })()
     .then(() => {
@@ -25,36 +31,54 @@ test('re-throws errors', async () => {
     })
 })
 
-test('finds and executes module descriptors', async () => {
-  expect(await branchy('./modules/add')(1, 2, 3)).toBe(6)
+test('finds and executes module descriptors', () => {
+  branchy('./modules/add')(1, 2, 3)
+  .then(result => {
+    expect(result).toBe(6)
+  })
 })
 
-test('function has correct __filename and __dirname', async () => {
+test('function has correct __filename and __dirname', () => {
   const { join } = require('path')
   const testDirname = __dirname
 
-  expect(await branchy(() => {
+  branchy(() => {
     return __filename
-  })()).toBe(join(testDirname, 'test.js'))
+  })()
+  .then(result => {
+    expect(result).toBe(join(testDirname, 'test.js'))
+  })
 
-  expect(await branchy(() => {
+  branchy(() => {
     return __dirname
-  })()).toBe(testDirname)
+  })()
+  .then(result => {
+    expect(result).toBe(testDirname)
+  })
 })
 
-test('module has correct __filename', async () => {
+test('module has correct __filename', () => {
   const { join } = require('path')
   const testDirname = __dirname
 
-  expect(await branchy('./modules/constants')()).toBe(join(testDirname, 'modules', 'constants.js'))
+  branchy('./modules/constants')()
+  .then(result => {
+    expect(result).toBe(join(testDirname, 'modules', 'constants.js'))
+  })
 })
 
-test('function does require() correctly', async () => {
-  expect(await branchy((...args) => {
+test('function does require() correctly', () => {
+  branchy((...args) => {
     return require('./modules/add')(...args)
-  })(1, 2, 3)).toBe(6)
+  })(1, 2, 3)
+  .then(result => {
+    expect(result).toBe(6)
+  })
 })
 
-test('module does require() correctly', async () => {
-  expect(await branchy('./modules/require')(1, 2, 3)).toBe(6)
+test('module does require() correctly', () => {
+  branchy('./modules/require')(1, 2, 3)
+  .then(result => {
+    expect(result).toBe(6)
+  })
 })
