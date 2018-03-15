@@ -1,6 +1,8 @@
 # Branchy
 
-This is a zero-dependency library to easily run computation-heavy functions in a separate thread.
+A zero-dependency library to comfortly run Node.js functions in a separate thread.
+
+## Installation
 
 ```bash
 npm install --save git+https://git@github.com/Loilo/branchy.git
