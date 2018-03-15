@@ -9,19 +9,26 @@ npm install --save git+https://git@github.com/Loilo/branchy.git
 ```
 
 ## Usage
+It's super easy: get `branchy` and wrap your function in it.
+
 The most simple (and horribly inefficient) case:
 
 ```javascript
 const branchy = require('branchy')
 
-const threadedAdder = branchy((...numbers) => {
+// Synchronous "add", returns number
+const adder = (...numbers) => {
   return numbers.reduce((carry, current) => carry + current, 0)
-})
+}
 
+// Asynchronous, threaded "add", returns Promise that resolves to number
+const threadedAdder = branchy(adder)
+
+// Don't forget to wrap in async function
 await threadedAdder(2, 3) // 5
 ```
 
-Alternatively, you could put the function in its own file and pass that to `branchy`:
+Alternatively, you could put the function in its own file and pass the file path to `branchy`:
 
 ```javascript
 // add.js
@@ -36,7 +43,7 @@ await threadedAdder(2, 3) // 5
 ```
 
 ### Gotchas
-The technical procedures of `branchy` sets some requirements for threaded functions:
+The technical procedures of `branchy` set some requirements for threaded functions:
 
 * Parameters passed to a threaded function are serialized. That means, threaded functions should only accept serializeable arguments. The same goes for return values of these functions.
 * Threaded functions are serialized before being run in a different thread. That means, they have no access to the local variable scope that was available during their definition:
