@@ -4,18 +4,18 @@ test('gets correct result for basic synchronous functions', () => {
   branchy((...numbers) => {
     return numbers.reduce((carry, current) => carry + current, 0)
   })(1, 2, 3)
-  .then(result => {
-    expect(result).toBe(6)
-  })
+    .then(result => {
+      expect(result).toBe(6)
+    })
 })
 
 test('gets correct result for basic asynchronous functions', () => {
   branchy(() => new Promise(resolve => {
     setTimeout(() => resolve('foo'), 50)
   }))()
-  .then(result => {
-    expect(result).toBe('foo')
-  })
+    .then(result => {
+      expect(result).toBe('foo')
+    })
 })
 
 test('re-throws errors', () => {
@@ -33,9 +33,9 @@ test('re-throws errors', () => {
 
 test('finds and executes module descriptors', () => {
   branchy('./modules/add')(1, 2, 3)
-  .then(result => {
-    expect(result).toBe(6)
-  })
+    .then(result => {
+      expect(result).toBe(6)
+    })
 })
 
 test('function has correct __filename and __dirname', () => {
@@ -45,16 +45,16 @@ test('function has correct __filename and __dirname', () => {
   branchy(() => {
     return __filename
   })()
-  .then(result => {
-    expect(result).toBe(join(testDirname, 'test.js'))
-  })
+    .then(result => {
+      expect(result).toBe(join(testDirname, 'test.js'))
+    })
 
   branchy(() => {
     return __dirname
   })()
-  .then(result => {
-    expect(result).toBe(testDirname)
-  })
+    .then(result => {
+      expect(result).toBe(testDirname)
+    })
 })
 
 test('module has correct __filename', () => {
@@ -62,23 +62,23 @@ test('module has correct __filename', () => {
   const testDirname = __dirname
 
   branchy('./modules/constants')()
-  .then(result => {
-    expect(result).toBe(join(testDirname, 'modules', 'constants.js'))
-  })
+    .then(result => {
+      expect(result).toBe(join(testDirname, 'modules', 'constants.js'))
+    })
 })
 
 test('function does require() correctly', () => {
   branchy((...args) => {
     return require('./modules/add')(...args)
   })(1, 2, 3)
-  .then(result => {
-    expect(result).toBe(6)
-  })
+    .then(result => {
+      expect(result).toBe(6)
+    })
 })
 
 test('module does require() correctly', () => {
   branchy('./modules/require')(1, 2, 3)
-  .then(result => {
-    expect(result).toBe(6)
-  })
+    .then(result => {
+      expect(result).toBe(6)
+    })
 })
