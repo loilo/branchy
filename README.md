@@ -1,5 +1,5 @@
 # Branchy
-![Travis](https://img.shields.io/travis/Loilo/color-blend.svg)
+![Travis](https://img.shields.io/travis/Loilo/branchy.svg)
 ![npm](https://img.shields.io/npm/v/branchy.svg)
 
 A zero-dependency library to comfortly run Node.js functions in a separate thread.
@@ -11,7 +11,7 @@ npm install --save branchy
 ```
 
 ## Usage
-It's super easy: get `branchy` and wrap your function in it.
+It's super easy: Pass your function to `branchy` and get an asynchronous, Promise-returning version of it.
 
 The most simple (and horribly inefficient) case:
 
@@ -47,8 +47,8 @@ await threadedAdder(2, 3) // 5
 ### Gotchas
 The technical procedures of `branchy` set some requirements for threaded functions:
 
-* Parameters passed to a threaded function are serialized. That means, threaded functions should only accept serializeable arguments. The same goes for return values of these functions.
-* Threaded functions are serialized before being run in a different thread. That means, they have no access to the local variable scope that was available during their definition:
+* Parameters passed to a threaded function are serialized. That means, threaded functions should only accept serializeable arguments. The same goes for their return values.
+* Threaded functions are serialized before being run in a different thread. Consequently, they have no access to the local variable scope that was available during their definition:
 
   ```javascript
   const branchy = require('branchy')
@@ -59,5 +59,6 @@ The technical procedures of `branchy` set some requirements for threaded functio
     return foo // ReferenceError: foo is not defined
   })
   ```
-* While the outer scope is not available in a threaded function, the `__filename` and `__dirname` variables are funnelled into the function with the values they have at the definition location.
+* Although the outer scope is not available in a threaded function, the `__filename` and `__dirname` variables are funnelled into the function with the values they have at the definition location.
+
   Also, the `require()` function works as expected – it resolves modules relative to the definition location.
