@@ -66,9 +66,19 @@ The technical procedures of `branchy` set some requirements for threaded functio
   })
   ```
 
-- Although the outer scope is not available in a threaded function, the `__filename` and `__dirname` variables are funnelled into the function with the values they have at the definition location.
+- Although the outer scope is not available in a threaded function, the `__filename` and `__dirname` variables are funnelled into the function with the values they have at the location where the function is passed to `branchy()`.
 
   Also, the `require()` function works as expected – it resolves modules relative to the file where `branchy()` was called.
+
+  > **Attention:** This means that you may *not* pass functions to branchy which have been imported from another location. `__filename`, `__dirname` and `require()` won't work as expected.
+  > To use functions from another file, pass their module specifier to branchy.
+  > ```javascript
+  > // like this
+  > const threadedFn = branchy('./fn')
+  >
+  > // not like this
+  > const threadedFn = branchy(require('./fn'))
+  > ```
 
 ## Advanced Usage
 
