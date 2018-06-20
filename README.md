@@ -53,7 +53,7 @@ await threadedAdder(2, 3) // 5
 
 The technical procedures of `branchy` set some requirements for threaded functions:
 
-- Parameters passed to a threaded function are serialized. That means, threaded functions should only accept serializeable arguments. The same goes for their return values.
+- Parameters passed to a threaded function will be serialized. That means, threaded functions should only accept serializeable arguments. The same goes for their return values.
 - Threaded functions are serialized before being run in a different thread. Consequently, they have no access to the local variable scope that was available during their definition:
 
   ```javascript
