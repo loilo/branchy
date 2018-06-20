@@ -27,10 +27,10 @@
   },
   "homepage": "https://github.com/Loilo/branchy#readme",
   "dependencies": {
-    "better-queue": "^3.8.7",
-    "jest": "^23.1.0"
+    "better-queue": "^3.8.7"
   },
   "devDependencies": {
+    "jest": "^23.1.0",
     "standard": "^11.0.1"
   },
   "standard": {
