@@ -1,6 +1,6 @@
 {
   "name": "branchy",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Comfortly execute a function in a separate process",
   "main": "lib/branchy.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "files": [
     "lib",
     "README.md",
-    "branchy.png"
+    "branchy.svg"
   ],
   "license": "MIT",
   "bugs": {
