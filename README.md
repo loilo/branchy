@@ -73,10 +73,10 @@ The technical procedures of `branchy` set some requirements for forked functions
   > **Attention:** This means that you may *not* pass functions to branchy which have been imported from another location. `__filename`, `__dirname` and `require()` won't work as expected.
   > To use functions from another file, pass their module specifier to branchy.
   > ```javascript
-  > // like this
+  > // do this
   > const forkedFn = branchy('./fn')
   >
-  > // not like this
+  > // not this
   > const forkedFn = branchy(require('./fn'))
   > ```
 
