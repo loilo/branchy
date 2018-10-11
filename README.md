@@ -8,7 +8,7 @@
 Comfortly run Node.js functions in a separate process.
 
 ```javascript
-const threadedAsyncFunction = branchy(heavySyncFunction)
+const forkedAsyncFunction = branchy(heavySyncFunction)
 ```
 
 ## Installation
@@ -27,14 +27,14 @@ const branchy = require('branchy')
 // Synchronous "add", returns number
 const adder = (a, b) => a + b
 
-// Asynchronous, threaded "add", returns Promise that resolves to number
-const threadedAdder = branchy(adder)
+// Asynchronous "add" in a child process, returns Promise that resolves to number
+const forkedAdder = branchy(adder)
 
 // Don't forget to wrap in async function
-await threadedAdder(2, 3) // 5
+await forkedAdder(2, 3) // 5
 
 // This example just adds two numbers, please don't ever
-// put that work into a thread in a real-world scenario
+// put that work into an extra process in a real-world scenario
 ```
 
 Alternatively, you could put the function in its own file and pass the file path to `branchy`:
@@ -44,17 +44,17 @@ Alternatively, you could put the function in its own file and pass the file path
 module.exports = (a, b) => a + b
 
 // index.js
-const threadedAdder = branchy('./add')
+const forkedAdder = branchy('./add')
 
-await threadedAdder(2, 3) // 5
+await forkedAdder(2, 3) // 5
 ```
 
 ## Caveats
 
-The technical procedures of `branchy` set some requirements for threaded functions:
+The technical procedures of `branchy` set some requirements for forked functions:
 
-- Parameters passed to a threaded function will be serialized. That means, threaded functions should only accept serializeable arguments. The same goes for their return values.
-- Threaded functions are serialized before being run in a different thread. Consequently, they have no access to the local variable scope that was available during their definition:
+- Parameters passed to a forked function will be serialized. That means, forked functions should only accept serializeable arguments. The same goes for their return values.
+- Forked functions are serialized before being run in a different process. Consequently, they have no access to the local variable scope that was available during their definition:
 
   ```javascript
   const branchy = require('branchy')
@@ -66,7 +66,7 @@ The technical procedures of `branchy` set some requirements for threaded functio
   })
   ```
 
-- Although the outer scope is not available in a threaded function, the `__filename` and `__dirname` variables are funnelled into the function with the values they have at the location where the function is passed to `branchy()`.
+- Although the outer scope is not available in a forked function, the `__filename` and `__dirname` variables are funnelled into the function with the values they have at the location where the function is passed to `branchy()`.
 
   Also, the `require()` function works as expected – it resolves modules relative to the file where `branchy()` was called.
 
@@ -74,17 +74,17 @@ The technical procedures of `branchy` set some requirements for threaded functio
   > To use functions from another file, pass their module specifier to branchy.
   > ```javascript
   > // like this
-  > const threadedFn = branchy('./fn')
+  > const forkedFn = branchy('./fn')
   >
   > // not like this
-  > const threadedFn = branchy(require('./fn'))
+  > const forkedFn = branchy(require('./fn'))
   > ```
 
 ## Advanced Usage
 
 ### Concurrency Control
 
-To avoid sharing work among too many threads, you may need to restrict how many threads a function may create at the same time. For this use case, `branchy` offers some simple concurrency control.
+To avoid sharing work among too many processes, you may need to restrict how many child processes a function may create at the same time. For this use case, `branchy` offers some simple concurrency control.
 
 Enable concurrency control by passing an optional second argument to the `branchy()` function, specifying the `concurrent` option:
 
@@ -92,7 +92,7 @@ Enable concurrency control by passing an optional second argument to the `branch
 const fn = branchy('./computation-heavy-sync-task', { concurrent: 4 })
 ```
 
-No matter how often you call `fn()`, there will be no more than 4 threads of it running at the same time. Each additional call will be queued and executed as soon as a previous call finishes.
+No matter how often you call `fn()`, there will be no more than 4 processes of it running at the same time. Each additional call will be queued and executed as soon as a previous call finishes.
 
 > **Note:** Passing a number as the `concurrent` option actually is a shorthand, you may pass an object to refine concurrency control:
 >
@@ -109,7 +109,7 @@ No matter how often you call `fn()`, there will be no more than 4 threads of it 
 > }
 > ```
 
-#### Automatically Choose Number of Concurrent Threads
+#### Automatically Choose Number of Concurrent Forks
 
 To restrict concurrency to the number of available CPU cores, use `{ concurrent: 'auto' }`.
 
@@ -132,12 +132,12 @@ call('Ghostbusters')
 // "Call Ghostbusters", "Call Alice", "Call Bob"
 ```
 
-- The `priority()` function will be passed the same arguments as the threaded function itself.
+- The `priority()` function will be passed the same arguments as the forked function itself.
 - Priority may be determined asynchronously (by returning a Promise).
 
 #### Call Order Strategy
 
-By default, the queue starts threads in the order functions were called ([first-in, first-out](<https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)>)). However you can make the queue handle the latest calls first (technically making it a [Stack](<https://en.wikipedia.org/wiki/Stack_(abstract_data_type)>)) by setting the `strategy`:
+By default, the queue starts processes in the order functions were called ([first-in, first-out](<https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)>)). However you can make the queue handle the latest calls first (technically making it a [Stack](<https://en.wikipedia.org/wiki/Stack_(abstract_data_type)>)) by setting the `strategy`:
 
 ```javascript
 {
@@ -149,18 +149,18 @@ By default, the queue starts threads in the order functions were called ([first-
 
 #### Concurrency Contexts
 
-While you now may control how many threads a _single_ function creates, thread limits are function-bound and not enforced across _different_ Branchy functions:
+While you now may control how many child processes a _single_ function creates, process limits are function-bound and not enforced across _different_ Branchy functions:
 
 ```javascript
 const inc = branchy(num => num + 1, { concurrent: 2 })
 const dec = branchy(num => num - 1, { concurrent: 2 })
 
-// This opens 2 threads
+// This opens 2 processes
 inc(1)
 inc(2)
 inc(3)
 
-// Another function, another context, so it opens another 2 threads
+// Another function, another context, so it opens another 2 processes
 dec(1)
 dec(2)
 dec(3)
@@ -176,13 +176,13 @@ const ctx = branchy.createContext({
 })
 ```
 
-Now share the `ctx` across multiple threaded functions, so the example above works as expected:
+Now share the `ctx` across multiple forked functions, so the example above works as expected:
 
 ```javascript
 const inc = branchy(num => num + 1, { concurrent: ctx })
 const dec = branchy(num => num - 1, { concurrent: ctx })
 
-// This opens 2 threads
+// This opens 2 processes
 inc(1)
 inc(2)
 inc(3)
