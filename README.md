@@ -1,4 +1,4 @@
-![Branchy](https://cdn.rawgit.com/Loilo/branchy/HEAD/branchy.svg)
+![Branchy](https://cdn.jsdelivr.net/gh/Loilo/branchy/branchy.svg)
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Travis](https://img.shields.io/travis/Loilo/branchy.svg?label=unix&logo=travis)](https://travis-ci.org/Loilo/branchy)
