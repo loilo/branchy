@@ -1,9 +1,7 @@
 ![Branchy](https://cdn.jsdelivr.net/gh/Loilo/branchy/branchy.svg)
 
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Travis](https://img.shields.io/travis/Loilo/branchy.svg?label=unix&logo=travis)](https://travis-ci.org/Loilo/branchy)
-[![AppVeyor](https://img.shields.io/appveyor/ci/Loilo/branchy.svg?label=windows&logo=appveyor)](https://ci.appveyor.com/project/Loilo/branchy)
-[![npm](https://img.shields.io/npm/v/branchy.svg)](https://www.npmjs.com/package/branchy)
+[![Test status on Travis](https://badgen.net/travis/loilo/branchy?label=build)](https://travis-ci.org/Loilo/branchy)
+[![npm](https://badgen.net/npm/v/branchy)](https://www.npmjs.com/package/branchy)
 
 Comfortly run Node.js functions in a separate process.
 
@@ -70,8 +68,9 @@ The technical procedures of `branchy` set some requirements for forked functions
 
   Also, the `require()` function works as expected – it resolves modules relative to the file where `branchy()` was called.
 
-  > **Attention:** This means that you may *not* pass functions to branchy which have been imported from another location. `__filename`, `__dirname` and `require()` won't work as expected.
+  > **Attention:** This means that you may _not_ pass functions to branchy which have been imported from another location. `__filename`, `__dirname` and `require()` won't work as expected.
   > To use functions from another file, pass their module specifier to branchy.
+  >
   > ```javascript
   > // do this
   > const forkedFn = branchy('./fn')

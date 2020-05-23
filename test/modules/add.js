@@ -1,1 +1,2 @@
-module.exports = (...numbers) => numbers.reduce((carry, current) => carry + current, 0)
+module.exports = (...numbers) =>
+  numbers.reduce((carry, current) => carry + current, 0)

@@ -39,19 +39,25 @@ test('finds and executes module descriptors', () => {
 })
 
 test('function has correct __filename and __dirname', () => {
-  const filename = branchy(() => {
-    return __filename
-  }, {concurrent: 'auto'})().then(result => {
+  const filename = branchy(
+    () => {
+      return __filename
+    },
+    { concurrent: 'auto' }
+  )().then(result => {
     expect(result).toBe(__filename)
   })
 
-  const dirname = branchy(() => {
-    return __dirname
-  }, {concurrent: 'auto'})().then(result => {
+  const dirname = branchy(
+    () => {
+      return __dirname
+    },
+    { concurrent: 'auto' }
+  )().then(result => {
     expect(result).toBe(__dirname)
   })
 
-  return Promise.all([ filename, dirname ])
+  return Promise.all([filename, dirname])
 })
 
 test('module has correct __filename', () => {
