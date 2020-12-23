@@ -1,6 +1,6 @@
 ![Branchy](https://cdn.jsdelivr.net/gh/Loilo/branchy/branchy.svg)
 
-[![Test status on Travis](https://badgen.net/travis/loilo/branchy?label=build)](https://travis-ci.org/Loilo/branchy)
+[![Tests](https://badgen.net/github/checks/loilo/branchy/master)](https://github.com/loilo/branchy/actions)
 [![npm](https://badgen.net/npm/v/branchy)](https://www.npmjs.com/package/branchy)
 
 Comfortly run Node.js functions in a separate process.
