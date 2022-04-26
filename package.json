@@ -1,6 +1,6 @@
 {
   "name": "branchy",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Comfortly execute a function in a separate process",
   "main": "lib/branchy.js",
   "scripts": {
